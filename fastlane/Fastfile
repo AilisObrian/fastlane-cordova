@@ -249,7 +249,6 @@ platform :ios do
       generate_p12: true,
       save_private_key: true,
       output_path: "./fastlane",
-      force: true,
     )
   end
 
