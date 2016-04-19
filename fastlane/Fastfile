@@ -59,6 +59,7 @@ end
 platform :ios do
   before_all do
     # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
+    ENV["MATCH_FORCE_FOR_NEW_DEVICES"] = "true"
 
     # increment_build_number
 
@@ -87,6 +88,7 @@ platform :ios do
       stage_config = config.stages[stage]
 
       %w(appstore development).each do |sign_type|
+        ENV['CERT_KEYCHAIN_PATH'] = stage_config['keychain_name'] + '.keychain'
         match(
           username: stage_config["apple_id"],
           keychain_name: stage_config["keychain_name"],
