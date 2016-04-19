@@ -89,6 +89,7 @@ platform :ios do
       %w(appstore development).each do |sign_type|
         match(
           username: stage_config["apple_id"],
+          keychain_name: stage_config["keychain_name"],
           team_id: stage_config["team_id"],
           app_identifier: app_id,
           git_url: stage_config["certificates_url"],
@@ -134,6 +135,7 @@ platform :ios do
 
     match(
       username: stage_config["apple_id"],
+      keychain_name: stage_config["keychain_name"],
       team_id: stage_config["team_id"],
       app_identifier: app_id,
       git_url: stage_config["certificates_url"],
