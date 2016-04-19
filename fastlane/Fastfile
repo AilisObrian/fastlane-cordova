@@ -242,7 +242,6 @@ platform :ios do
       app_identifier: app_id,
       username: stage_config['apple_id'],
       team_id: stage_config['team_id'],
-      keychain_path: stage_config['keychain_name'],
       development: development,
       generate_p12: false,
       save_private_key: false,
