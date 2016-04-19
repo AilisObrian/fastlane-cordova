@@ -234,6 +234,7 @@ platform :ios do
 
   desc "Create and upload the push certificates"
   private_lane :push_certs do |options|
+    ENV["PEM_P12_PASSWORD"] = prompt(text: "PEM_P12_PASSWORD: ")
     stage = options[:stage]
     stage_config = config.stages[stage]
     app_id = app_id_for(stage)
@@ -245,33 +246,10 @@ platform :ios do
       username: stage_config['apple_id'],
       team_id: stage_config['team_id'],
       development: development,
-      generate_p12: false,
-      save_private_key: false,
+      generate_p12: true,
+      save_private_key: true,
       output_path: "./fastlane",
-      new_profile: proc do |profile_path|
-        require 'openssl'
-        require 'aws-sdk'
-
-        pem = File.read(profile_path)
-        pkey = OpenSSL::PKey::RSA.new(pem)
-        cert = OpenSSL::X509::Certificate.new(pem)
-
-        Aws.config[:region] = 'us-east-1'
-        sns = Aws::SNS::Client.new
-
-        resp = sns.create_platform_application({
-          name: app_id,
-          platform: sandbox ? 'APNS_SANDBOX' : 'APNS',
-          attributes: { # required
-            'PlatformCredential' => pkey.to_s,
-            'PlatformPrincipal' => cert.to_s
-          }
-        })
-
-        puts "------------------ A new Application was created in AWS SNS ------------------ ".yellow
-        puts "Application Name: #{app_id}".yellow
-        puts "Application ARN: #{resp.platform_application_arn}".yellow
-      end
+      force: true,
     )
   end
 
